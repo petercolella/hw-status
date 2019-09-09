@@ -6,8 +6,6 @@ router
   .get(usersController.findAll)
   .post(usersController.create);
 
-router.route('/test/:id').get(usersController.findByIdTest);
-
 router
   .route('/:id')
   .get(usersController.findById)
