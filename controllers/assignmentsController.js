@@ -19,7 +19,7 @@ module.exports = {
         };
         axios(settings)
           .then(response => {
-            db.Assignment.remove({}, function(err, docs) {
+            db.Assignment.deleteMany({}, function(err, docs) {
               if (err) return console.log('Remove Error:', err);
             });
             db.Assignment.insertMany(response.data, function(err, docs) {
