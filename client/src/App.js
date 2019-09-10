@@ -22,11 +22,14 @@ function App() {
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [courseId, setCourseId] = useState('');
 
   const populate = () => {
-    API.populateAssignments({ email, password }).then(() => {
+    API.populateAssignments({ email, password, courseId }).then(res => {
+      console.log('res:', res.data);
       setEmail('');
       setPassword('');
+      setCourseId('');
     });
   };
 
@@ -49,6 +52,14 @@ function App() {
             className={classes.textField}
             value={password}
             onChange={e => setPassword(e.target.value)}
+            margin="normal"
+          />
+          <TextField
+            id="courseId"
+            label="Course ID"
+            className={classes.textField}
+            value={courseId}
+            onChange={e => setCourseId(e.target.value)}
             margin="normal"
           />
         </form>
