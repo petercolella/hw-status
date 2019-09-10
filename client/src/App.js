@@ -101,25 +101,28 @@ function App() {
       <Container maxWidth="lg">
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
+            className={classes.textField}
             id="email"
             label="Email"
-            className={classes.textField}
+            type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             margin="normal"
           />
           <TextField
+            className={classes.textField}
             id="password"
             label="Password"
-            className={classes.textField}
+            type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             margin="normal"
           />
           <TextField
+            className={classes.textField}
             id="courseId"
             label="Course ID"
-            className={classes.textField}
+            type="number"
             value={courseId}
             onChange={e => setCourseId(e.target.value)}
             margin="normal"
