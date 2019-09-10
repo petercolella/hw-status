@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -29,6 +29,16 @@ function App() {
   const [password, setPassword] = useState('');
   const [courseId, setCourseId] = useState('');
   const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    API.getAssignments().then(res => {
+      res.data.forEach(assignment => {
+        assignment['submitted'] =
+          assignment['submitted'] === true ? '\u{2705}' : '';
+      });
+      setTableData(res.data);
+    });
+  }, []);
 
   const columns = [
     {
@@ -72,7 +82,10 @@ function App() {
 
   const populate = () => {
     API.populateAssignments({ email, password, courseId }).then(res => {
-      console.log('res:', res.data);
+      res.data.forEach(assignment => {
+        assignment['submitted'] =
+          assignment['submitted'] === true ? '\u{2705}' : '';
+      });
       setTableData(res.data);
       setEmail('');
       setPassword('');
