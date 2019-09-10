@@ -7,8 +7,28 @@ module.exports = {
     const login = { email, password };
     axios
       .post('https://www.bootcampspot.com/api/instructor/v1/login', login)
-      .then(response => console.log(response));
-    res.end();
+      .then(response => {
+        const settings = {
+          url: 'https://www.bootcampspot.com/api/instructor/v1/grades',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            authToken: response.data.authenticationInfo.authToken
+          },
+          data: { courseId: parseInt(courseId) }
+        };
+        axios(settings)
+          .then(response => {
+            db.Assignment.remove({}, function(err, docs) {
+              if (err) return console.log('Remove Error:', err);
+            });
+            db.Assignment.insertMany(response.data, function(err, docs) {
+              if (err) return console.log('Insert Error:', err);
+              res.json(docs);
+            });
+          })
+          .catch(err => console.log(err.message));
+      });
   },
   findAll: function(req, res) {
     db.Assignment.find(req.query)
