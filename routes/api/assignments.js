@@ -6,6 +6,8 @@ router
   .get(assignmentsController.findAll)
   .post(assignmentsController.create);
 
+router.route('/populate').post(assignmentsController.populate);
+
 router
   .route('/:id')
   .get(assignmentsController.findById)

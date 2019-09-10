@@ -1,6 +1,15 @@
 const db = require('../models');
+const axios = require('axios');
 
 module.exports = {
+  populate: function(req, res) {
+    const { email, password, courseId } = req.body;
+    const login = { email, password };
+    axios
+      .post('https://www.bootcampspot.com/api/instructor/v1/login', login)
+      .then(response => console.log(response));
+    res.end();
+  },
   findAll: function(req, res) {
     db.Assignment.find(req.query)
       .then(dbModel => {
