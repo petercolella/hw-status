@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import MUIDataTable from 'mui-datatables';
 import logo from './logo.svg';
 import './App.css';
 import API from './utils/API';
@@ -12,9 +14,12 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'wrap'
   },
   textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
     width: 200
+  },
+  button: {
+    margin: theme.spacing(2)
   }
 }));
 
@@ -23,10 +28,52 @@ function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [courseId, setCourseId] = useState('');
+  const [tableData, setTableData] = useState([]);
+
+  const columns = [
+    {
+      name: 'assignmentTitle',
+      label: 'Assignment Title',
+      options: {
+        filter: true,
+        sort: true
+      }
+    },
+    {
+      name: 'studentName',
+      label: 'Student Name',
+      options: {
+        filter: true,
+        sort: true
+      }
+    },
+    {
+      name: 'submitted',
+      label: 'Submitted',
+      options: {
+        filter: true,
+        sort: true
+      }
+    },
+    {
+      name: 'grade',
+      label: 'Grade',
+      options: {
+        filter: true,
+        sort: true
+      }
+    }
+  ];
+
+  const options = {
+    filterType: 'checkbox',
+    responsive: 'scrollFullHeight'
+  };
 
   const populate = () => {
     API.populateAssignments({ email, password, courseId }).then(res => {
       console.log('res:', res.data);
+      setTableData(res.data);
       setEmail('');
       setPassword('');
       setCourseId('');
@@ -37,6 +84,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+      </header>
+      <Container maxWidth="lg">
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
             id="email"
@@ -63,10 +112,20 @@ function App() {
             margin="normal"
           />
         </form>
-        <Button variant="contained" color="primary" onClick={populate}>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          onClick={populate}>
           Submit
         </Button>
-      </header>
+        <MUIDataTable
+          title={'Homework Status'}
+          data={tableData}
+          columns={columns}
+          options={options}
+        />
+      </Container>
     </div>
   );
 }
