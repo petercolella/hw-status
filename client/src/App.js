@@ -84,7 +84,7 @@ function App() {
     API.populateAssignments({ email, password, courseId }).then(res => {
       res.data.forEach(assignment => {
         assignment['submitted'] =
-          assignment['submitted'] === true ? '\u{2705}' : '';
+          assignment['submitted'] === true ? '\u{2705}' : '\u274C';
       });
       setTableData(res.data);
       setEmail('');
