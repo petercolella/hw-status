@@ -1,4 +1,5 @@
 module.exports = {
   User: require('./user'),
-  Assignment: require('./assignment')
+  Assignment: require('./assignment'),
+  Course: require('./course')
 };
