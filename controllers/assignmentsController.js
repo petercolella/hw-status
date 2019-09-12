@@ -19,12 +19,43 @@ module.exports = {
         };
         axios(settings)
           .then(response => {
-            db.Assignment.deleteMany({}, function(err, docs) {
-              if (err) return console.log('Remove Error:', err);
-            });
-            db.Assignment.insertMany(response.data, function(err, docs) {
+            db.Assignment.insertMany(response.data, function(err, assignments) {
               if (err) return console.log('Insert Error:', err);
-              res.json(docs);
+              const idArr = [];
+              assignments.forEach(doc => idArr.push(doc._id));
+              db.Course.findOne(
+                { courseId: parseInt(courseId) },
+                (err, docs) => {
+                  if (err) console.error(err);
+                  if (!docs) {
+                    db.Course.create(
+                      { courseId: parseInt(courseId), assignments: idArr },
+                      { new: true },
+                      (err, dbModel1) => {
+                        if (err) console.error(err);
+                        console.log('dbModel1', dbModel1);
+                        res.json(dbModel1);
+                      }
+                    );
+                  } else {
+                    docs.assignments.forEach(assignmentId => {
+                      db.Assignment.findByIdAndDelete(assignmentId, err => {
+                        if (err) console.error(err);
+                      });
+                    });
+                    db.Course.findOneAndUpdate(
+                      { courseId: parseInt(courseId) },
+                      { $set: { assignments: idArr } },
+                      { new: true },
+                      (err, updatedCourse2) => {
+                        if (err) console.error(err);
+                        console.log('updatedCourse2', updatedCourse2);
+                        res.json(updatedCourse2);
+                      }
+                    );
+                  }
+                }
+              );
             });
           })
           .catch(err => console.log(err.message));
@@ -33,7 +64,6 @@ module.exports = {
   findAll: function(req, res) {
     db.Assignment.find(req.query)
       .then(dbModel => {
-        //   console.log(dbModel);
         res.json(dbModel);
       })
       .catch(err => res.status(422).json(err));
