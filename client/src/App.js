@@ -30,16 +30,6 @@ function App() {
   const [courseId, setCourseId] = useState('');
   const [tableData, setTableData] = useState([]);
 
-  useEffect(() => {
-    API.getAssignments().then(res => {
-      res.data.forEach(assignment => {
-        assignment['submitted'] =
-          assignment['submitted'] === true ? '\u{2705}' : '';
-      });
-      setTableData(res.data);
-    });
-  }, []);
-
   const columns = [
     {
       name: 'assignmentTitle',
@@ -80,13 +70,27 @@ function App() {
     responsive: 'scrollFullHeight'
   };
 
+  const loadData = id => {
+    API.getCourse(id).then(res => {
+      if (res.data) {
+        res.data.assignments.forEach(assignment => {
+          assignment['submitted'] =
+            assignment['submitted'] === true ? '\u{2705}' : '\u274C';
+        });
+        setTableData(res.data.assignments);
+      }
+    });
+  };
+
+  useEffect(() => {
+    const courseId = localStorage.getItem('courseId');
+    if (courseId) loadData(courseId);
+  }, []);
+
   const populate = () => {
     API.populateAssignments({ email, password, courseId }).then(res => {
-      res.data.forEach(assignment => {
-        assignment['submitted'] =
-          assignment['submitted'] === true ? '\u{2705}' : '\u274C';
-      });
-      setTableData(res.data);
+      localStorage.setItem('courseId', res.data._id);
+      loadData(res.data._id);
       setEmail('');
       setPassword('');
       setCourseId('');
@@ -101,6 +105,7 @@ function App() {
       <Container maxWidth="lg">
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
+            autoComplete="username"
             className={classes.textField}
             id="email"
             label="Email"
@@ -110,6 +115,7 @@ function App() {
             margin="normal"
           />
           <TextField
+            autoComplete="current-password"
             className={classes.textField}
             id="password"
             label="Password"
