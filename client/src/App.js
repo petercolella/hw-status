@@ -71,15 +71,17 @@ function App() {
   };
 
   const loadData = id => {
-    API.getCourse(id).then(res => {
-      if (res.data) {
-        res.data.assignments.forEach(assignment => {
-          assignment['submitted'] =
-            assignment['submitted'] === true ? '\u{2705}' : '\u274C';
-        });
-        setTableData(res.data.assignments);
-      }
-    });
+    API.getCourse(id)
+      .then(res => {
+        if (res.data) {
+          res.data.assignments.forEach(assignment => {
+            assignment['submitted'] =
+              assignment['submitted'] === true ? '\u{2705}' : '\u274C';
+          });
+          setTableData(res.data.assignments);
+        }
+      })
+      .catch(err => console.error(err));
   };
 
   useEffect(() => {
@@ -88,13 +90,15 @@ function App() {
   }, []);
 
   const populate = () => {
-    API.populateAssignments({ email, password, courseId }).then(res => {
-      localStorage.setItem('courseId', res.data._id);
-      loadData(res.data._id);
-      setEmail('');
-      setPassword('');
-      setCourseId('');
-    });
+    API.populateAssignments({ email, password, courseId })
+      .then(res => {
+        localStorage.setItem('courseId', res.data._id);
+        loadData(res.data._id);
+        setEmail('');
+        setPassword('');
+        setCourseId('');
+      })
+      .catch(err => console.error(err));
   };
 
   return (
