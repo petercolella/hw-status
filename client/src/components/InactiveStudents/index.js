@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,8 +9,32 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(2)
+  }
+}));
+
 const InactiveStudents = props => {
-  const [open, setOpen] = React.useState(false);
+  console.log(props);
+  const classes = useStyles();
+
+  const nameArr = props.assignments
+    .reduce((arr, assignment) => [...arr, assignment.studentName], [])
+    .filter((name, i, arr) => arr.indexOf(name) === i);
+  console.log('nameArr:', nameArr);
+
+  const nameArr2 = Array.from(
+    new Set(
+      props.assignments.reduce(
+        (arr, assignment) => [...arr, assignment.studentName],
+        []
+      )
+    )
+  );
+  console.log('nameArr2:', nameArr2);
+
+  const [open, setOpen] = useState(false);
 
   function handleClickOpen() {
     setOpen(true);
@@ -27,12 +53,11 @@ const InactiveStudents = props => {
         aria-labelledby="form-dialog-title"
         scroll={'body'}>
         <DialogTitle id="form-dialog-title">
-          Personalize Your {props.nudge.name} Nudge
+          Select Inactive Students
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Give it your special touch. You can make changes as often as you
-            like!
+            Selected students will not appear in the table.
           </DialogContentText>
           <TextField
             id="nudgeFrequencyUnit"
@@ -40,7 +65,7 @@ const InactiveStudents = props => {
             label="Frequency Unit"
             type="text"
             fullWidth
-            // value={props.nudge.nudgeFrequencyUnit}
+            value="Please Select"
             // onChange={props.handleInputChange('nudgeFrequencyUnit')}
             margin="normal"
             variant="outlined">
@@ -59,6 +84,13 @@ const InactiveStudents = props => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Button
+        className={classes.button}
+        // variant="contained"
+        color="secondary"
+        onClick={handleClickOpen}>
+        View/Edit Inactive Students
+      </Button>
     </div>
   );
 };
