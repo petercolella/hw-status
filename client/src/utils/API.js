@@ -4,6 +4,9 @@ export default {
   getCourse: function(id) {
     return axios.get('/api/courses/' + id);
   },
+  updateCourse: function(id, courseData) {
+    return axios.put('/api/courses/' + id, courseData);
+  },
   populateAssignments: function(reqBody) {
     return axios.post('/api/assignments/populate', reqBody);
   },
