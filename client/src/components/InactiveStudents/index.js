@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,6 +12,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
+import API from '../../utils/API';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -26,45 +27,43 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const InactiveStudents = props => {
-  console.log(props);
   const classes = useStyles();
-
-  //   const nameArr = props.assignments
-  //     .reduce((arr, assignment) => [...arr, assignment.studentName], [])
-  //     .filter((name, i, arr) => arr.indexOf(name) === i);
-  //   console.log('nameArr:', nameArr);
 
   const [open, setOpen] = useState(false);
   const [nameArr, setNameArr] = useState([]);
   const [state, setState] = useState({});
 
-  const nameArrRef = useRef();
-  nameArrRef.current = nameArr;
-
-  useEffect(() => {
-    setNameArr(
-      Array.from(
-        new Set(
-          props.assignments.reduce(
-            (arr, assignment) => [...arr, assignment.studentName],
-            []
-          )
+  const createNameArr = props => {
+    const newNameArr = Array.from(
+      new Set(
+        props.assignments.reduce(
+          (arr, assignment) => [...arr, assignment.studentName],
+          []
         )
       )
     );
+    setNameArr(newNameArr);
+  };
 
-    setState(
-      nameArrRef.current.reduce((nameObj, name) => {
-        return {
-          ...nameObj,
-          [name]: props.inactiveStudents.includes(name)
-        };
-      }, {})
-    );
+  const nameArrRef = useRef();
+  nameArrRef.current = nameArr;
+
+  const createNameObject = useCallback(() => {
+    const newNameObj = nameArrRef.current.reduce((nameObj, name) => {
+      return {
+        ...nameObj,
+        [name]: props.inactiveStudents.includes(name)
+      };
+    }, {});
+    setState(newNameObj);
   }, [props]);
 
-  console.log('nameArr:', nameArr);
-  console.log('state:', state);
+  useEffect(() => {
+    createNameArr(props);
+    createNameObject();
+  }, [props, createNameObject]);
+
+  console.log('Inactive Students Component is rendering.');
 
   const handleChange = name => event => {
     setState({ ...state, [name]: event.target.checked });
@@ -76,6 +75,26 @@ const InactiveStudents = props => {
 
   function handleClose() {
     setOpen(false);
+  }
+
+  function handleSubmit() {
+    const newInactiveStudents = [];
+
+    Object.keys(state).forEach(name => {
+      if (state[name] === true) {
+        newInactiveStudents.push(name);
+      }
+    });
+
+    const courseData = {
+      nonStudents: newInactiveStudents
+    };
+
+    API.updateCourse(props.courseDbId, courseData)
+      .then(res => console.log(res, res))
+      .catch(err => console.error(err));
+
+    handleClose();
   }
 
   return (
@@ -116,7 +135,7 @@ const InactiveStudents = props => {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleSubmit} color="primary">
             Submit
           </Button>
         </DialogActions>
