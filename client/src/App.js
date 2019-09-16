@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import InactiveStudents from './components/InactiveStudents';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -28,6 +29,8 @@ function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [courseId, setCourseId] = useState('');
+  const [courseDbId, setCourseDbId] = useState('');
+  const [inactiveStudents, setInactiveStudents] = useState([]);
   const [tableData, setTableData] = useState([]);
 
   const columns = [
@@ -79,24 +82,30 @@ function App() {
               assignment['submitted'] === true ? '\u{2705}' : '\u274C';
           });
           setTableData(res.data.assignments);
+          setInactiveStudents(res.data.nonStudents);
         }
       })
       .catch(err => console.error(err));
   };
 
   useEffect(() => {
-    const courseId = localStorage.getItem('courseId');
-    if (courseId) loadData(courseId);
+    const courseDbId = localStorage.getItem('courseDbId');
+    if (courseDbId) {
+      loadData(courseDbId);
+      setCourseDbId(courseDbId);
+    }
   }, []);
 
   const populate = () => {
     API.populateAssignments({ email, password, courseId })
       .then(res => {
-        localStorage.setItem('courseId', res.data._id);
-        loadData(res.data._id);
+        localStorage.setItem('courseDbId', res.data._id);
         setEmail('');
         setPassword('');
         setCourseId('');
+        setCourseDbId(courseDbId);
+        setInactiveStudents(res.data.nonStudents);
+        loadData(res.data._id);
       })
       .catch(err => console.error(err));
   };
@@ -145,6 +154,11 @@ function App() {
           onClick={populate}>
           Submit
         </Button>
+        <InactiveStudents
+          courseDbId={courseDbId}
+          assignments={tableData}
+          inactiveStudents={inactiveStudents}
+        />
         <MUIDataTable
           title={'Homework Status'}
           data={tableData}
