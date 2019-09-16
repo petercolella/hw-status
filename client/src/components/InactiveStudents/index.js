@@ -121,7 +121,7 @@ const InactiveStudents = props => {
                     key={name}
                     control={
                       <Checkbox
-                        checked={state.name}
+                        checked={state[name]}
                         onChange={handleChange(name)}
                         value={name}
                       />
