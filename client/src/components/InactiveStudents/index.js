@@ -6,7 +6,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -29,14 +28,16 @@ const useStyles = makeStyles(theme => ({
 const InactiveStudents = props => {
   const classes = useStyles();
 
+  const { assignments, courseDbId, inactiveStudents, loadData } = props;
+
   const [open, setOpen] = useState(false);
   const [nameArr, setNameArr] = useState([]);
   const [state, setState] = useState({});
 
-  const createNameArr = props => {
+  const createNameArr = assignments => {
     const newNameArr = Array.from(
       new Set(
-        props.assignments.reduce(
+        assignments.reduce(
           (arr, assignment) => [...arr, assignment.studentName],
           []
         )
@@ -52,16 +53,16 @@ const InactiveStudents = props => {
     const newNameObj = nameArrRef.current.reduce((nameObj, name) => {
       return {
         ...nameObj,
-        [name]: props.inactiveStudents.includes(name)
+        [name]: inactiveStudents.includes(name)
       };
     }, {});
     setState(newNameObj);
-  }, [props]);
+  }, [inactiveStudents]);
 
   useEffect(() => {
-    createNameArr(props);
+    createNameArr(assignments);
     createNameObject();
-  }, [props, createNameObject]);
+  }, [assignments, createNameObject]);
 
   console.log('Inactive Students Component is rendering.');
 
@@ -90,10 +91,11 @@ const InactiveStudents = props => {
       nonStudents: newInactiveStudents
     };
 
-    API.updateCourse(props.courseDbId, courseData)
-      .then(res => console.log(res, res))
+    API.updateCourse(courseDbId, courseData)
+      .then(res => console.log('res.data:', res.data))
       .catch(err => console.error(err));
 
+    loadData(courseDbId);
     handleClose();
   }
 
@@ -101,6 +103,7 @@ const InactiveStudents = props => {
     <div>
       <Dialog
         fullWidth={true}
+        maxWidth={'lg'}
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
@@ -113,9 +116,11 @@ const InactiveStudents = props => {
             Selected students will not appear in the table.
           </DialogContentText>
           <div className={classes.root}>
-            <FormControl component="fieldset" className={classes.formControl}>
-              <FormLabel component="legend">Assign responsibility</FormLabel>
-              <FormGroup>
+            <FormControl
+              component="fieldset"
+              className={classes.formControl}
+              fullWidth={true}>
+              <FormGroup row>
                 {nameArr.map(name => (
                   <FormControlLabel
                     key={name}
@@ -130,7 +135,9 @@ const InactiveStudents = props => {
                   />
                 ))}
               </FormGroup>
-              <FormHelperText>Be careful</FormHelperText>
+              <FormHelperText>
+                *Deselected students will return to the table.
+              </FormHelperText>
             </FormControl>
           </div>
         </DialogContent>
