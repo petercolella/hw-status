@@ -71,7 +71,9 @@ function App() {
 
   const options = {
     filterType: 'checkbox',
-    responsive: 'scrollFullHeight'
+    responsive: 'scrollFullHeight',
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 15, 25, 50, 75, 100]
   };
 
   const loadData = id => {
