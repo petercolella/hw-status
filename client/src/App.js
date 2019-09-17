@@ -31,6 +31,7 @@ function App() {
   const [courseId, setCourseId] = useState('');
   const [courseDbId, setCourseDbId] = useState('');
   const [inactiveStudents, setInactiveStudents] = useState([]);
+  const [assignments, setAssignments] = useState([]);
   const [tableData, setTableData] = useState([]);
 
   const columns = [
@@ -80,8 +81,15 @@ function App() {
           res.data.assignments.forEach(assignment => {
             assignment['submitted'] =
               assignment['submitted'] === true ? '\u{2705}' : '\u274C';
+            assignment['grade'] =
+              assignment['grade'] === null ? 'Ungraded' : assignment['grade'];
           });
-          setTableData(res.data.assignments);
+          const filteredTableData = res.data.assignments.filter(
+            assignment =>
+              !res.data.nonStudents.includes(assignment['studentName'])
+          );
+          setAssignments(res.data.assignments);
+          setTableData(filteredTableData);
           setInactiveStudents(res.data.nonStudents);
         }
       })
@@ -156,8 +164,9 @@ function App() {
         </Button>
         <InactiveStudents
           courseDbId={courseDbId}
-          assignments={tableData}
+          assignments={assignments}
           inactiveStudents={inactiveStudents}
+          loadData={loadData}
         />
         <MUIDataTable
           title={'Homework Status'}
