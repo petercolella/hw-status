@@ -97,18 +97,18 @@ function App() {
                 ? 'Unsubmitted & Ungraded'
                 : assignment['grade'];
           });
-          let filteredTableData = res.data.assignments.filter(
+          const filteredStudentTableData = res.data.assignments.filter(
             assignment =>
               !res.data.nonStudents.includes(assignment['studentName'])
           );
-          filteredTableData = res.data.assignments.filter(
+          const filteredAssignmentTableData = filteredStudentTableData.filter(
             assignment =>
               !res.data.filteredAssignments.includes(
                 assignment['assignmentTitle']
               )
           );
           setAssignments(res.data.assignments);
-          setTableData(filteredTableData);
+          setTableData(filteredAssignmentTableData);
           setInactiveStudents(res.data.nonStudents);
           setFilteredAssignments(res.data.filteredAssignments);
         }
