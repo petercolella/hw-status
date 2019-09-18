@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import InactiveStudents from './components/InactiveStudents';
+import FilteredAssignments from './components/FilteredAssignments';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -21,6 +22,9 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(2)
+  },
+  table: {
+    margin: theme.spacing(2)
   }
 }));
 
@@ -31,6 +35,7 @@ function App() {
   const [courseId, setCourseId] = useState('');
   const [courseDbId, setCourseDbId] = useState('');
   const [inactiveStudents, setInactiveStudents] = useState([]);
+  const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [tableData, setTableData] = useState([]);
 
@@ -87,15 +92,25 @@ function App() {
               assignment['submitted'] === '\u{2705}' &&
               assignment['grade'] === null
                 ? 'Ungraded'
+                : assignment['submitted'] === '\u274C' &&
+                  assignment['grade'] === null
+                ? 'Unsubmitted & Ungraded'
                 : assignment['grade'];
           });
-          const filteredTableData = res.data.assignments.filter(
+          let filteredTableData = res.data.assignments.filter(
             assignment =>
               !res.data.nonStudents.includes(assignment['studentName'])
+          );
+          filteredTableData = res.data.assignments.filter(
+            assignment =>
+              !res.data.filteredAssignments.includes(
+                assignment['assignmentTitle']
+              )
           );
           setAssignments(res.data.assignments);
           setTableData(filteredTableData);
           setInactiveStudents(res.data.nonStudents);
+          setFilteredAssignments(res.data.filteredAssignments);
         }
       })
       .catch(err => console.error(err));
@@ -118,6 +133,7 @@ function App() {
         setCourseId('');
         setCourseDbId(courseDbId);
         setInactiveStudents(res.data.nonStudents);
+        setFilteredAssignments(res.data.filteredAssignments);
         loadData(res.data._id);
       })
       .catch(err => console.error(err));
@@ -173,7 +189,14 @@ function App() {
           inactiveStudents={inactiveStudents}
           loadData={loadData}
         />
+        <FilteredAssignments
+          courseDbId={courseDbId}
+          assignments={assignments}
+          filteredAssignments={filteredAssignments}
+          loadData={loadData}
+        />
         <MUIDataTable
+          className={classes.table}
           title={'Homework Status'}
           data={tableData}
           columns={columns}
