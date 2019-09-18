@@ -90,12 +90,14 @@ function App() {
               assignment['submitted'] === true ? '\u{2705}' : '\u274C';
             assignment['grade'] =
               assignment['submitted'] === '\u{2705}' &&
-              assignment['grade'] === null
-                ? 'Ungraded'
-                : assignment['submitted'] === '\u274C' &&
-                  assignment['grade'] === null
-                ? 'Unsubmitted & Ungraded'
-                : assignment['grade'];
+              assignment['grade'] === null ? (
+                <span style={{ color: '#f50057' }}>Ungraded</span>
+              ) : assignment['submitted'] === '\u274C' &&
+                assignment['grade'] === null ? (
+                'Unsubmitted & Ungraded'
+              ) : (
+                assignment['grade']
+              );
           });
 
           const filteredTableData = res.data.assignments
