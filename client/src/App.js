@@ -84,7 +84,10 @@ function App() {
             assignment['submitted'] =
               assignment['submitted'] === true ? '\u{2705}' : '\u274C';
             assignment['grade'] =
-              assignment['grade'] === null ? 'Ungraded' : assignment['grade'];
+              assignment['submitted'] === '\u{2705}' &&
+              assignment['grade'] === null
+                ? 'Ungraded'
+                : assignment['grade'];
           });
           const filteredTableData = res.data.assignments.filter(
             assignment =>
