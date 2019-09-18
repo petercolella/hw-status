@@ -9,7 +9,8 @@ const courseSchema = new Schema({
       ref: 'Assignment'
     }
   ],
-  nonStudents: Array
+  nonStudents: Array,
+  filteredAssignments: Array
 });
 
 const Course = mongoose.model('Course', courseSchema);
