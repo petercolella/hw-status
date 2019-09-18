@@ -15,7 +15,7 @@ import API from '../../utils/API';
 
 const useStyles = makeStyles(theme => ({
   button: {
-    margin: theme.spacing(2)
+    margin: theme.spacing(1)
   },
   root: {
     display: 'flex'
@@ -64,8 +64,6 @@ const InactiveStudents = props => {
     createNameObject();
   }, [assignments, createNameObject]);
 
-  console.log('Inactive Students Component is rendering.');
-
   const handleChange = name => event => {
     setState({ ...state, [name]: event.target.checked });
   };
@@ -75,6 +73,7 @@ const InactiveStudents = props => {
   }
 
   function handleClose() {
+    loadData(courseDbId);
     setOpen(false);
   }
 
@@ -92,11 +91,8 @@ const InactiveStudents = props => {
     };
 
     API.updateCourse(courseDbId, courseData)
-      .then(res => console.log('res.data:', res.data))
+      .then(res => handleClose())
       .catch(err => console.error(err));
-
-    loadData(courseDbId);
-    handleClose();
   }
 
   return (
@@ -142,6 +138,9 @@ const InactiveStudents = props => {
           </div>
         </DialogContent>
         <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
           <Button onClick={handleSubmit} color="primary">
             Submit
           </Button>
@@ -149,7 +148,6 @@ const InactiveStudents = props => {
       </Dialog>
       <Button
         className={classes.button}
-        // variant="contained"
         color="secondary"
         onClick={handleClickOpen}>
         View/Edit Inactive Students
