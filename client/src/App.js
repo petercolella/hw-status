@@ -97,18 +97,21 @@ function App() {
                 ? 'Unsubmitted & Ungraded'
                 : assignment['grade'];
           });
-          const filteredStudentTableData = res.data.assignments.filter(
-            assignment =>
-              !res.data.nonStudents.includes(assignment['studentName'])
-          );
-          const filteredAssignmentTableData = filteredStudentTableData.filter(
-            assignment =>
-              !res.data.filteredAssignments.includes(
-                assignment['assignmentTitle']
-              )
-          );
+
+          const filteredTableData = res.data.assignments
+            .filter(
+              assignment =>
+                !res.data.nonStudents.includes(assignment['studentName'])
+            )
+            .filter(
+              assignment =>
+                !res.data.filteredAssignments.includes(
+                  assignment['assignmentTitle']
+                )
+            );
+
           setAssignments(res.data.assignments);
-          setTableData(filteredAssignmentTableData);
+          setTableData(filteredTableData);
           setInactiveStudents(res.data.nonStudents);
           setFilteredAssignments(res.data.filteredAssignments);
         }
