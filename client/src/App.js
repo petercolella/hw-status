@@ -69,7 +69,12 @@ function App() {
       label: 'Grade',
       options: {
         filter: true,
-        sort: true
+        sort: true,
+        setCellProps: cellValue => {
+          if (cellValue === 'Ungraded') {
+            return { style: { color: '#f50057' } };
+          }
+        }
       }
     }
   ];
@@ -85,22 +90,23 @@ function App() {
     API.getCourse(id)
       .then(res => {
         if (res.data) {
-          res.data.assignments.forEach(assignment => {
-            assignment['submitted'] =
-              assignment['submitted'] === true ? '\u{2705}' : '\u274C';
-            assignment['grade'] =
-              assignment['submitted'] === '\u{2705}' &&
-              assignment['grade'] === null ? (
-                <span style={{ color: '#f50057' }}>Ungraded</span>
-              ) : assignment['submitted'] === '\u274C' &&
-                assignment['grade'] === null ? (
-                'Unsubmitted & Ungraded'
-              ) : (
-                assignment['grade']
-              );
-          });
-
           const filteredTableData = res.data.assignments
+            .map(assignment => {
+              assignment['submitted'] =
+                assignment['submitted'] === true ? '\u{2705}' : '\u274C';
+              return { ...assignment, submitted: assignment['submitted'] };
+            })
+            .map(assignment => {
+              assignment['grade'] =
+                assignment['submitted'] === '\u{2705}' &&
+                assignment['grade'] === null
+                  ? 'Ungraded'
+                  : assignment['submitted'] === '\u274C' &&
+                    assignment['grade'] === null
+                  ? 'Unsubmitted & Ungraded'
+                  : assignment['grade'];
+              return { ...assignment, grade: assignment['grade'] };
+            })
             .filter(
               assignment =>
                 !res.data.nonStudents.includes(assignment['studentName'])
