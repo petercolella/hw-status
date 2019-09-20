@@ -51,8 +51,15 @@ const columns = [
       filter: true,
       sort: true,
       setCellProps: cellValue => {
-        if (cellValue === 'Ungraded') {
+        if (
+          cellValue === 'Unsubmitted & Ungraded' ||
+          cellValue === 'Incomplete'
+        ) {
           return { style: { color: '#f50057' } };
+        }
+
+        if (cellValue === 'Ungraded') {
+          return { style: { color: '#ffab00' } };
         }
       }
     }
