@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { amber, green, red } from '@material-ui/core/colors';
+import clsx from 'clsx';
 import Container from '@material-ui/core/Container';
-import Form from './components/Form';
 import Button from '@material-ui/core/Button';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import InfoIcon from '@material-ui/icons/Info';
+import CloseIcon from '@material-ui/icons/Close';
+import WarningIcon from '@material-ui/icons/Warning';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import IconButton from '@material-ui/core/IconButton';
+import Slide from '@material-ui/core/Slide';
+import Form from './components/Form';
 import InactiveStudents from './components/InactiveStudents';
 import FilteredAssignments from './components/FilteredAssignments';
 import MUIDataTable from 'mui-datatables';
@@ -10,7 +21,37 @@ import logo from './logo.svg';
 import './App.css';
 import API from './utils/API';
 
+const variantIcon = {
+  success: CheckCircleIcon,
+  warning: WarningIcon,
+  error: ErrorIcon,
+  info: InfoIcon
+};
+
 const useStyles = makeStyles(theme => ({
+  success: {
+    backgroundColor: green[600]
+  },
+  error: {
+    backgroundColor: theme.palette.error.dark
+  },
+  info: {
+    backgroundColor: theme.palette.primary.main
+  },
+  warning: {
+    backgroundColor: amber[700]
+  },
+  icon: {
+    fontSize: 20
+  },
+  iconVariant: {
+    opacity: 0.9,
+    marginRight: theme.spacing(1)
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center'
+  },
   button: {
     margin: theme.spacing(2)
   },
@@ -55,11 +96,11 @@ const columns = [
           cellValue === 'Unsubmitted & Ungraded' ||
           cellValue === 'Incomplete'
         ) {
-          return { style: { color: '#f50057' } };
+          return { style: { color: red['A400'] } };
         }
 
         if (cellValue === 'Ungraded') {
-          return { style: { color: '#ffab00' } };
+          return { style: { color: amber[700] } };
         }
       }
     }
@@ -96,8 +137,43 @@ const filterTableData = data => {
     );
 };
 
+const MySnackbarContentWrapper = React.forwardRef((props, ref) => {
+  const classes = useStyles();
+  const { className, message, onClose, variant, ...other } = props;
+  const Icon = variantIcon[variant];
+
+  return (
+    <SnackbarContent
+      className={clsx(classes[variant])}
+      aria-describedby="client-snackbar"
+      message={
+        <span id="client-snackbar" className={classes.message}>
+          <Icon className={clsx(classes.icon, classes.iconVariant)} />
+          {message}
+        </span>
+      }
+      action={[
+        <IconButton
+          key="close"
+          aria-label="close"
+          color="inherit"
+          onClick={onClose}>
+          <CloseIcon className={classes.icon} />
+        </IconButton>
+      ]}
+      {...other}
+      ref={ref}
+    />
+  );
+});
+
+function TransitionUp(props) {
+  return <Slide {...props} direction="down" />;
+}
+
 function App() {
   const classes = useStyles();
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [courseId, setCourseId] = useState('');
@@ -106,6 +182,14 @@ function App() {
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [inactiveStudents, setInactiveStudents] = useState([]);
   const [tableData, setTableData] = useState([]);
+
+  function handleSnackbarClose(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarOpen(false);
+  }
 
   useEffect(() => {
     const courseDbId = localStorage.getItem('courseDbId');
@@ -131,16 +215,20 @@ function App() {
   };
 
   const populate = () => {
-    API.populateAssignments({ email, password, courseId })
-      .then(res => {
-        localStorage.setItem('courseDbId', res.data._id);
-        setEmail('');
-        setPassword('');
-        setCourseId('');
-        loadData(res.data._id);
-        setCourseDbId(courseDbId);
-      })
-      .catch(err => console.error(err));
+    if (!email || !password || !courseId) {
+      setSnackbarOpen(true);
+    } else {
+      API.populateAssignments({ email, password, courseId })
+        .then(res => {
+          localStorage.setItem('courseDbId', res.data._id);
+          setEmail('');
+          setPassword('');
+          setCourseId('');
+          loadData(res.data._id);
+          setCourseDbId(courseDbId);
+        })
+        .catch(err => console.error(err));
+    }
   };
 
   return (
@@ -148,6 +236,24 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
       </header>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right'
+        }}
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={handleSnackbarClose}
+        TransitionComponent={TransitionUp}
+        ContentProps={{
+          'aria-describedby': 'message-id'
+        }}>
+        <MySnackbarContentWrapper
+          onClose={handleSnackbarClose}
+          variant="warning"
+          message={<span>All fields are required!</span>}
+        />
+      </Snackbar>
       <Container maxWidth="lg">
         <Form
           email={email}
