@@ -182,6 +182,11 @@ function App() {
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [inactiveStudents, setInactiveStudents] = useState([]);
   const [tableData, setTableData] = useState([]);
+  const [error, setError] = useState({
+    email: false,
+    password: false,
+    courseId: false
+  });
 
   function handleSnackbarClose(event, reason) {
     if (reason === 'clickaway') {
@@ -189,6 +194,15 @@ function App() {
     }
 
     setSnackbarOpen(false);
+    setTimeout(
+      () =>
+        setError({
+          email: false,
+          password: false,
+          courseId: false
+        }),
+      2000
+    );
   }
 
   useEffect(() => {
@@ -216,6 +230,11 @@ function App() {
 
   const populate = () => {
     if (!email || !password || !courseId) {
+      setError({
+        email: email === '',
+        password: password === '',
+        courseId: courseId === ''
+      });
       setSnackbarOpen(true);
     } else {
       API.populateAssignments({ email, password, courseId })
@@ -262,6 +281,7 @@ function App() {
           setPassword={setPassword}
           courseId={courseId}
           setCourseId={setCourseId}
+          error={error}
         />
         <Button
           className={classes.button}

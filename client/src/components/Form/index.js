@@ -19,7 +19,7 @@ const Form = props => {
   return (
     <form className={classes.container} noValidate autoComplete="off">
       <TextField
-        autoComplete="username"
+        autoComplete="email"
         className={classes.textField}
         id="email"
         label="Email"
@@ -27,6 +27,8 @@ const Form = props => {
         value={props.email}
         onChange={e => props.setEmail(e.target.value)}
         margin="normal"
+        error={props.error.email}
+        helperText={props.error.email ? 'Please enter your email.' : ''}
       />
       <TextField
         autoComplete="current-password"
@@ -37,6 +39,8 @@ const Form = props => {
         value={props.password}
         onChange={e => props.setPassword(e.target.value)}
         margin="normal"
+        error={props.error.password}
+        helperText={props.error.password ? 'Please enter your password.' : ''}
       />
       <TextField
         className={classes.textField}
@@ -46,6 +50,8 @@ const Form = props => {
         value={props.courseId}
         onChange={e => props.setCourseId(e.target.value)}
         margin="normal"
+        error={props.error.courseId}
+        helperText={props.error.courseId ? 'Please enter a course ID.' : ''}
       />
     </form>
   );
