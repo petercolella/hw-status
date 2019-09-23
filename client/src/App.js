@@ -187,6 +187,8 @@ function App() {
     password: false,
     courseId: false
   });
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [variant, setVariant] = useState('');
 
   function handleSnackbarClose(event, reason) {
     if (reason === 'clickaway') {
@@ -235,6 +237,8 @@ function App() {
         password: password === '',
         courseId: courseId === ''
       });
+      setSnackbarMessage('All Fields are Required');
+      setVariant('warning');
       setSnackbarOpen(true);
     } else {
       API.populateAssignments({ email, password, courseId })
@@ -246,7 +250,15 @@ function App() {
           loadData(res.data._id);
           setCourseDbId(courseDbId);
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+          console.error(err);
+          setSnackbarMessage(
+            `${err.response.statusText}: ${err.response.data.message ||
+              err.response.data}`
+          );
+          setVariant('error');
+          setSnackbarOpen(true);
+        });
     }
   };
 
@@ -269,8 +281,8 @@ function App() {
         }}>
         <MySnackbarContentWrapper
           onClose={handleSnackbarClose}
-          variant="warning"
-          message={<span>All fields are required!</span>}
+          variant={variant}
+          message={snackbarMessage}
         />
       </Snackbar>
       <Container maxWidth="lg">
