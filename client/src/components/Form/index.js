@@ -28,7 +28,7 @@ const Form = props => {
         onChange={e => props.setEmail(e.target.value)}
         margin="normal"
         error={props.error.email}
-        helperText={props.error.email ? 'Please enter your email.' : ''}
+        helperText={props.error.email ? 'Please enter your email.' : ' '}
       />
       <TextField
         autoComplete="current-password"
@@ -40,7 +40,7 @@ const Form = props => {
         onChange={e => props.setPassword(e.target.value)}
         margin="normal"
         error={props.error.password}
-        helperText={props.error.password ? 'Please enter your password.' : ''}
+        helperText={props.error.password ? 'Please enter your password.' : ' '}
       />
       <TextField
         className={classes.textField}
@@ -51,7 +51,7 @@ const Form = props => {
         onChange={e => props.setCourseId(e.target.value)}
         margin="normal"
         error={props.error.courseId}
-        helperText={props.error.courseId ? 'Please enter a course ID.' : ''}
+        helperText={props.error.courseId ? 'Please enter a course ID.' : ' '}
       />
     </form>
   );
