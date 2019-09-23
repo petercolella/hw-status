@@ -65,6 +65,9 @@ module.exports = {
     axios
       .post('https://www.bootcampspot.com/api/instructor/v1/login', login)
       .then(response => {
+        console.log('response.data:', response.data);
+        if (!response.data.success)
+          return res.status(401).json(response.data.errorCode);
         axios(axiosConfig(response, courseId))
           .then(response => {
             db.Assignment.insertMany(response.data)
