@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { amber, green, red } from '@material-ui/core/colors';
+import { amber, blue, green, red } from '@material-ui/core/colors';
 import clsx from 'clsx';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -52,8 +53,19 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center'
   },
+  wrapper: {
+    position: 'relative'
+  },
   button: {
     margin: theme.spacing(2)
+  },
+  buttonProgress: {
+    color: blue[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
   },
   table: {
     margin: theme.spacing(2)
@@ -189,6 +201,7 @@ function App() {
   });
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [variant, setVariant] = useState('');
+  const [loading, setLoading] = React.useState(false);
 
   function handleSnackbarClose(event, reason) {
     if (reason === 'clickaway') {
@@ -231,6 +244,9 @@ function App() {
   };
 
   const populate = () => {
+    if (!loading) {
+      setLoading(true);
+    }
     if (!email || !password || !courseId) {
       setError({
         email: email === '',
@@ -249,6 +265,7 @@ function App() {
           setCourseId('');
           loadData(res.data._id);
           setCourseDbId(courseDbId);
+          setLoading(false);
         })
         .catch(err => {
           console.error(err);
@@ -295,13 +312,19 @@ function App() {
           setCourseId={setCourseId}
           error={error}
         />
-        <Button
-          className={classes.button}
-          variant="contained"
-          color="primary"
-          onClick={populate}>
-          Submit
-        </Button>
+        <div className={classes.wrapper}>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            onClick={populate}>
+            Submit
+          </Button>
+          {loading && (
+            <CircularProgress size={24} className={classes.buttonProgress} />
+          )}
+        </div>
         <InactiveStudents
           courseDbId={courseDbId}
           assignments={assignments}
