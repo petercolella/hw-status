@@ -273,6 +273,7 @@ function App() {
             `${err.response.statusText}: ${err.response.data.message ||
               err.response.data}`
           );
+          setLoading(false);
           setVariant('error');
           setSnackbarOpen(true);
         });
