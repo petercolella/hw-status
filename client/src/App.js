@@ -243,10 +243,7 @@ function App() {
       .catch(err => console.error(err));
   };
 
-  const populate = () => {
-    if (!loading) {
-      setLoading(true);
-    }
+  const deleteAssignments = () => {
     if (!email || !password || !courseId) {
       setError({
         email: email === '',
@@ -257,6 +254,46 @@ function App() {
       setVariant('warning');
       setSnackbarOpen(true);
     } else {
+      if (!loading) {
+        setLoading(true);
+      }
+      API.deleteAssignments({ email, password, courseId })
+        .then(res => {
+          localStorage.setItem('courseDbId', res.data._id);
+          setEmail('');
+          setPassword('');
+          setCourseId('');
+          loadData(res.data._id);
+          setCourseDbId(courseDbId);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error(err);
+          setSnackbarMessage(
+            `${err.response.statusText}: ${err.response.data.message ||
+              err.response.data}`
+          );
+          setLoading(false);
+          setVariant('error');
+          setSnackbarOpen(true);
+        });
+    }
+  };
+
+  const populate = () => {
+    if (!email || !password || !courseId) {
+      setError({
+        email: email === '',
+        password: password === '',
+        courseId: courseId === ''
+      });
+      setSnackbarMessage('All Fields are Required');
+      setVariant('warning');
+      setSnackbarOpen(true);
+    } else {
+      if (!loading) {
+        setLoading(true);
+      }
       API.populateAssignments({ email, password, courseId })
         .then(res => {
           localStorage.setItem('courseDbId', res.data._id);
@@ -321,6 +358,19 @@ function App() {
             disabled={loading}
             onClick={populate}>
             Submit
+          </Button>
+          {loading && (
+            <CircularProgress size={24} className={classes.buttonProgress} />
+          )}
+        </div>
+        <div className={classes.wrapper}>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="secondary"
+            disabled={loading}
+            onClick={deleteAssignments}>
+            Delete Course Data
           </Button>
           {loading && (
             <CircularProgress size={24} className={classes.buttonProgress} />
