@@ -59,6 +59,36 @@ function handleError(res, err) {
 }
 
 module.exports = {
+  delete: function(req, res) {
+    const { email, password, courseId } = req.body;
+    const login = { email, password };
+    axios
+      .post('https://www.bootcampspot.com/api/instructor/v1/login', login)
+      .then(response => {
+        console.log('response.data:', response.data);
+        if (!response.data.success)
+          return res.status(401).json(response.data.errorCode);
+        findCourse(courseId)
+          .then(docs => {
+            if (!docs) {
+              res.json('Course is not in database.');
+            } else {
+              deleteCourseAssignments(docs)
+                .then(() => {
+                  updateCourse(docs, [])
+                    .then(updatedCourse => {
+                      console.log('updatedCourse:', updatedCourse);
+                      res.json(updatedCourse);
+                    })
+                    .catch(err => res.status(422).json(err));
+                })
+                .catch(err => handleError(res, err));
+            }
+          })
+          .catch(err => handleError(res, err));
+      })
+      .catch(err => handleError(res, err));
+  },
   populate: function(req, res) {
     const { email, password, courseId } = req.body;
     const login = { email, password };
