@@ -71,7 +71,7 @@ module.exports = {
         findCourse(courseId)
           .then(docs => {
             if (!docs) {
-              res.json('Course is not in database.');
+              return res.status(404).json('Course is not in database.');
             } else {
               deleteCourseAssignments(docs)
                 .then(() => {
