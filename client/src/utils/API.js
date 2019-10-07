@@ -10,6 +10,9 @@ export default {
   populateAssignments: function(reqBody) {
     return axios.post('/api/assignments/populate', reqBody);
   },
+  deleteAssignments: function(reqBody) {
+    return axios.post('/api/assignments/delete', reqBody);
+  },
   getAssignments: function() {
     return axios.get('/api/assignments');
   },
