@@ -7,6 +7,7 @@ router
   .post(assignmentsController.create);
 
 router.route('/populate').post(assignmentsController.populate);
+router.route('/delete').post(assignmentsController.delete);
 
 router
   .route('/:id')
