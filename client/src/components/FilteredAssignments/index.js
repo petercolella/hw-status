@@ -73,7 +73,7 @@ const FilteredAssignments = props => {
   }
 
   function handleClose() {
-    loadData(courseDbId);
+    if (courseDbId) loadData(courseDbId);
     setOpen(false);
   }
 
@@ -90,9 +90,10 @@ const FilteredAssignments = props => {
       filteredAssignments: newFilteredTitles
     };
 
-    API.updateCourse(courseDbId, courseData)
-      .then(res => handleClose())
-      .catch(err => console.error(err));
+    if (courseDbId)
+      API.updateCourse(courseDbId, courseData)
+        .then(res => handleClose())
+        .catch(err => console.error(err));
   }
 
   return (
@@ -141,7 +142,7 @@ const FilteredAssignments = props => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button disabled={!courseDbId} onClick={handleSubmit} color="primary">
             Submit
           </Button>
         </DialogActions>
