@@ -18,7 +18,7 @@ import Form from './components/Form';
 import InactiveStudents from './components/InactiveStudents';
 import FilteredAssignments from './components/FilteredAssignments';
 import MUIDataTable from 'mui-datatables';
-import logo from './logo.svg';
+import logo from './trilogy.png';
 import './App.css';
 import API from './utils/API';
 
@@ -202,6 +202,7 @@ function App() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [variant, setVariant] = useState('');
   const [loading, setLoading] = React.useState(false);
+  const [deleteLoading, setDeleteLoading] = React.useState(false);
 
   function handleSnackbarClose(event, reason) {
     if (reason === 'clickaway') {
@@ -221,10 +222,10 @@ function App() {
   }
 
   useEffect(() => {
-    const courseDbId = localStorage.getItem('courseDbId');
-    if (courseDbId) {
-      loadData(courseDbId);
-      setCourseDbId(courseDbId);
+    const id = localStorage.getItem('courseDbId');
+    if (id) {
+      loadData(id);
+      setCourseDbId(id);
     }
   }, []);
 
@@ -254,18 +255,18 @@ function App() {
       setVariant('warning');
       setSnackbarOpen(true);
     } else {
-      if (!loading) {
-        setLoading(true);
+      if (!deleteLoading) {
+        setDeleteLoading(true);
       }
       API.deleteAssignments({ email, password, courseId })
         .then(res => {
-          localStorage.setItem('courseDbId', res.data._id);
+          localStorage.removeItem('courseDbId');
           setEmail('');
           setPassword('');
           setCourseId('');
+          setCourseDbId('');
           loadData(res.data._id);
-          setCourseDbId(courseDbId);
-          setLoading(false);
+          setDeleteLoading(false);
         })
         .catch(err => {
           console.error(err);
@@ -273,7 +274,7 @@ function App() {
             `${err.response.statusText}: ${err.response.data.message ||
               err.response.data}`
           );
-          setLoading(false);
+          setDeleteLoading(false);
           setVariant('error');
           setSnackbarOpen(true);
         });
@@ -301,7 +302,7 @@ function App() {
           setPassword('');
           setCourseId('');
           loadData(res.data._id);
-          setCourseDbId(courseDbId);
+          setCourseDbId(res.data._id);
           setLoading(false);
         })
         .catch(err => {
@@ -368,11 +369,11 @@ function App() {
             className={classes.button}
             variant="contained"
             color="secondary"
-            disabled={loading}
+            disabled={deleteLoading}
             onClick={deleteAssignments}>
             Delete Course Data
           </Button>
-          {loading && (
+          {deleteLoading && (
             <CircularProgress size={24} className={classes.buttonProgress} />
           )}
         </div>
