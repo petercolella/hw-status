@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { amber, blue, green, red } from '@material-ui/core/colors';
 import clsx from 'clsx';
 import Container from '@material-ui/core/Container';
@@ -18,6 +18,7 @@ import Form from './components/Form';
 import InactiveStudents from './components/InactiveStudents';
 import FilteredAssignments from './components/FilteredAssignments';
 import MUIDataTable from 'mui-datatables';
+import Tooltip from '@material-ui/core/Tooltip';
 import logo from './trilogy.png';
 import './App.css';
 import API from './utils/API';
@@ -71,6 +72,14 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2)
   }
 }));
+
+const CustomTooltip = withStyles(theme => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    fontSize: 20,
+    padding: theme.spacing(1)
+  }
+}))(Tooltip);
 
 const columns = [
   {
@@ -318,6 +327,9 @@ function App() {
     }
   };
 
+  const tooltipTitle =
+    'Only the API data will be deleted. Inactive students and filtered assignments will remain in the database.';
+
   return (
     <div className="App">
       <header className="App-header">
@@ -365,14 +377,16 @@ function App() {
           )}
         </div>
         <div className={classes.wrapper}>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="secondary"
-            disabled={deleteLoading}
-            onClick={deleteAssignments}>
-            Delete Course Data
-          </Button>
+          <CustomTooltip title={tooltipTitle}>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="secondary"
+              disabled={deleteLoading}
+              onClick={deleteAssignments}>
+              Delete Course Data
+            </Button>
+          </CustomTooltip>
           {deleteLoading && (
             <CircularProgress size={24} className={classes.buttonProgress} />
           )}
