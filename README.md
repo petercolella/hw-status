@@ -4,13 +4,16 @@
 
 # Changelog
 
-## [1.1.0] - 2019-09-17
+## [1.3.0] - 2019-10-9
 
 ### Added
 
-- Feature to filter inactive students
-- Feature to filter specific assignments
-- Data in each cell of Submitted and Grade columns (no null values)
+- Tooltip for Delete Course Data button
+- Button to delete course data
+
+### Changed
+
+- React logo to Trilogy logo
 
 ## [1.2.0] - 2019-09-23
 
@@ -31,3 +34,11 @@
 ### Removed
 
 - Unused boilerplate and redundant code
+
+## [1.1.0] - 2019-09-17
+
+### Added
+
+- Feature to filter inactive students
+- Feature to filter specific assignments
+- Data in each cell of Submitted and Grade columns (no null values)
