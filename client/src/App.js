@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { amber, blue, green, red } from '@material-ui/core/colors';
+import { amber, blue, green } from '@material-ui/core/colors';
 import clsx from 'clsx';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -17,7 +17,7 @@ import Slide from '@material-ui/core/Slide';
 import Form from './components/Form';
 import InactiveStudents from './components/InactiveStudents';
 import FilteredAssignments from './components/FilteredAssignments';
-import MUIDataTable from 'mui-datatables';
+import Table from './components/Table';
 import Tooltip from '@material-ui/core/Tooltip';
 import logo from './trilogy.png';
 import './App.css';
@@ -67,9 +67,6 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12
-  },
-  table: {
-    margin: theme.spacing(2)
   }
 }));
 
@@ -80,60 +77,6 @@ const CustomTooltip = withStyles(theme => ({
     padding: theme.spacing(1)
   }
 }))(Tooltip);
-
-const columns = [
-  {
-    name: 'assignmentTitle',
-    label: 'Assignment Title',
-    options: {
-      filter: true,
-      sort: true
-    }
-  },
-  {
-    name: 'studentName',
-    label: 'Student Name',
-    options: {
-      filter: true,
-      sort: true
-    }
-  },
-  {
-    name: 'submitted',
-    label: 'Submitted',
-    options: {
-      filter: true,
-      sort: true
-    }
-  },
-  {
-    name: 'grade',
-    label: 'Grade',
-    options: {
-      filter: true,
-      sort: true,
-      setCellProps: cellValue => {
-        if (
-          cellValue === 'Unsubmitted & Ungraded' ||
-          cellValue === 'Incomplete'
-        ) {
-          return { style: { color: red['A400'] } };
-        }
-
-        if (cellValue === 'Ungraded') {
-          return { style: { color: amber[700] } };
-        }
-      }
-    }
-  }
-];
-
-const options = {
-  filterType: 'checkbox',
-  responsive: 'scrollFullHeight',
-  rowsPerPage: 10,
-  rowsPerPageOptions: [10, 15, 25, 50, 75, 100]
-};
 
 const filterTableData = data => {
   return data.assignments
@@ -403,13 +346,7 @@ function App() {
           filteredAssignments={filteredAssignments}
           loadData={loadData}
         />
-        <MUIDataTable
-          className={classes.table}
-          title={'Homework Status'}
-          data={tableData}
-          columns={columns}
-          options={options}
-        />
+        <Table tableData={tableData} />
       </Container>
     </div>
   );
