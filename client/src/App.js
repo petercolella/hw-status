@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 
 import Button from '@material-ui/core/Button';
@@ -7,8 +7,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import Slide from '@material-ui/core/Slide';
 import Snackbar from '@material-ui/core/Snackbar';
-import Tooltip from '@material-ui/core/Tooltip';
 
+import CustomTooltip from './components/CustomTooltip';
 import FilteredAssignments from './components/FilteredAssignments';
 import Form from './components/Form';
 import InactiveStudents from './components/InactiveStudents';
@@ -35,14 +35,6 @@ const useStyles = makeStyles(theme => ({
     marginLeft: -12
   }
 }));
-
-const CustomTooltip = withStyles(theme => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    fontSize: 20,
-    padding: theme.spacing(1)
-  }
-}))(Tooltip);
 
 const filterTableData = data => {
   return data.assignments
