@@ -129,16 +129,37 @@ function App() {
     );
   };
 
+  const handleFormError = () => {
+    setError({
+      email: email === '',
+      password: password === '',
+      courseId: courseId === ''
+    });
+    setSnackbarMessage('All Fields are Required');
+    setVariant('warning');
+    setSnackbarOpen(true);
+  };
+
+  const clearFormAndLoadData = res => {
+    setEmail('');
+    setPassword('');
+    setCourseId('');
+    loadData(res.data._id);
+  };
+
+  const handleResError = err => {
+    console.error(err);
+    setSnackbarMessage(
+      `${err.response.statusText}: ${err.response.data.message ||
+        err.response.data}`
+    );
+    setVariant('error');
+    setSnackbarOpen(true);
+  };
+
   const deleteAssignments = () => {
     if (!email || !password || !courseId) {
-      setError({
-        email: email === '',
-        password: password === '',
-        courseId: courseId === ''
-      });
-      setSnackbarMessage('All Fields are Required');
-      setVariant('warning');
-      setSnackbarOpen(true);
+      handleFormError();
     } else {
       if (!deleteLoading) {
         setDeleteLoading(true);
@@ -146,36 +167,20 @@ function App() {
       API.deleteAssignments({ email, password, courseId })
         .then(res => {
           localStorage.removeItem('courseDbId');
-          setEmail('');
-          setPassword('');
-          setCourseId('');
+          clearFormAndLoadData(res);
           setCourseDbId('');
-          loadData(res.data._id);
           setDeleteLoading(false);
         })
         .catch(err => {
-          console.error(err);
-          setSnackbarMessage(
-            `${err.response.statusText}: ${err.response.data.message ||
-              err.response.data}`
-          );
+          handleResError(err);
           setDeleteLoading(false);
-          setVariant('error');
-          setSnackbarOpen(true);
         });
     }
   };
 
   const populate = () => {
     if (!email || !password || !courseId) {
-      setError({
-        email: email === '',
-        password: password === '',
-        courseId: courseId === ''
-      });
-      setSnackbarMessage('All Fields are Required');
-      setVariant('warning');
-      setSnackbarOpen(true);
+      handleFormError();
     } else {
       if (!loading) {
         setLoading(true);
@@ -183,22 +188,13 @@ function App() {
       API.populateAssignments({ email, password, courseId })
         .then(res => {
           localStorage.setItem('courseDbId', res.data._id);
-          setEmail('');
-          setPassword('');
-          setCourseId('');
-          loadData(res.data._id);
+          clearFormAndLoadData(res);
           setCourseDbId(res.data._id);
           setLoading(false);
         })
         .catch(err => {
-          console.error(err);
-          setSnackbarMessage(
-            `${err.response.statusText}: ${err.response.data.message ||
-              err.response.data}`
-          );
+          handleResError(err);
           setLoading(false);
-          setVariant('error');
-          setSnackbarOpen(true);
         });
     }
   };
