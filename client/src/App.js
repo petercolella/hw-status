@@ -13,12 +13,12 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CustomTooltip from './components/CustomTooltip';
 import FilteredAssignments from './components/FilteredAssignments';
 import Form from './components/Form';
+import Header from './components/Header';
 import InactiveStudents from './components/InactiveStudents';
 import SnackbarContentWrapper from './components/SnackbarContentWrapper';
 import Table from './components/Table';
 
 import API from './utils/API';
-import logo from './trilogy.png';
 import './App.css';
 
 const useStyles = makeStyles(theme => ({
@@ -204,9 +204,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
+      <Header />
       <Snackbar
         ContentProps={{
           'aria-describedby': 'message-id'
