@@ -5,6 +5,8 @@ import { blue } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SendIcon from '@material-ui/icons/Send';
 import Slide from '@material-ui/core/Slide';
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -65,41 +67,27 @@ function TransitionUp(props) {
 
 function App() {
   const classes = useStyles();
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [courseId, setCourseId] = useState('');
-  const [courseDbId, setCourseDbId] = useState('');
+
   const [assignments, setAssignments] = useState([]);
+  const [courseDbId, setCourseDbId] = useState('');
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [inactiveStudents, setInactiveStudents] = useState([]);
   const [tableData, setTableData] = useState([]);
+
   const [error, setError] = useState({
     email: false,
     password: false,
     courseId: false
   });
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [variant, setVariant] = useState('');
-  const [loading, setLoading] = React.useState(false);
-  const [deleteLoading, setDeleteLoading] = React.useState(false);
-
-  function handleSnackbarClose(event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setSnackbarOpen(false);
-    setTimeout(
-      () =>
-        setError({
-          email: false,
-          password: false,
-          courseId: false
-        }),
-      2000
-    );
-  }
+  const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     const id = localStorage.getItem('courseDbId');
@@ -122,6 +110,23 @@ function App() {
         }
       })
       .catch(err => console.error(err));
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarOpen(false);
+    setTimeout(
+      () =>
+        setError({
+          email: false,
+          password: false,
+          courseId: false
+        }),
+      2000
+    );
   };
 
   const deleteAssignments = () => {
@@ -207,40 +212,41 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
       </header>
       <Snackbar
+        ContentProps={{
+          'aria-describedby': 'message-id'
+        }}
+        TransitionComponent={TransitionUp}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right'
         }}
-        open={snackbarOpen}
         autoHideDuration={2000}
         onClose={handleSnackbarClose}
-        TransitionComponent={TransitionUp}
-        ContentProps={{
-          'aria-describedby': 'message-id'
-        }}>
+        open={snackbarOpen}>
         <SnackbarContentWrapper
+          message={snackbarMessage}
           onClose={handleSnackbarClose}
           variant={variant}
-          message={snackbarMessage}
         />
       </Snackbar>
       <Container maxWidth="lg">
         <Form
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
           courseId={courseId}
-          setCourseId={setCourseId}
+          email={email}
           error={error}
+          password={password}
+          setCourseId={setCourseId}
+          setEmail={setEmail}
+          setPassword={setPassword}
         />
         <div className={classes.wrapper}>
           <Button
             className={classes.button}
-            variant="contained"
             color="primary"
             disabled={loading}
-            onClick={populate}>
+            onClick={populate}
+            startIcon={<SendIcon />}
+            variant="contained">
             Submit
           </Button>
           {loading && (
@@ -251,10 +257,11 @@ function App() {
           <CustomTooltip title={tooltipTitle}>
             <Button
               className={classes.button}
-              variant="contained"
               color="secondary"
               disabled={deleteLoading}
-              onClick={deleteAssignments}>
+              onClick={deleteAssignments}
+              startIcon={<DeleteIcon />}
+              variant="contained">
               Delete Course Data
             </Button>
           </CustomTooltip>
@@ -263,14 +270,14 @@ function App() {
           )}
         </div>
         <InactiveStudents
-          courseDbId={courseDbId}
           assignments={assignments}
+          courseDbId={courseDbId}
           inactiveStudents={inactiveStudents}
           loadData={loadData}
         />
         <FilteredAssignments
-          courseDbId={courseDbId}
           assignments={assignments}
+          courseDbId={courseDbId}
           filteredAssignments={filteredAssignments}
           loadData={loadData}
         />
