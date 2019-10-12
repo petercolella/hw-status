@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Paper from '@material-ui/core/Paper';
 import SendIcon from '@material-ui/icons/Send';
 
 import CustomTooltip from './components/CustomTooltip';
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative'
   },
   button: {
-    margin: theme.spacing(2)
+    margin: theme.spacing(1)
   },
   buttonProgress: {
     color: blue[500],
@@ -33,6 +34,10 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12
+  },
+  paper: {
+    margin: theme.spacing(2),
+    padding: theme.spacing(1)
   }
 }));
 
@@ -190,45 +195,47 @@ function App() {
         variant={variant}
       />
       <Container maxWidth="lg">
-        <Form
-          courseId={courseId}
-          email={email}
-          error={error}
-          password={password}
-          setCourseId={setCourseId}
-          setEmail={setEmail}
-          setPassword={setPassword}
-        />
-        <div className={classes.wrapper}>
-          <Button
-            className={classes.button}
-            color="primary"
-            disabled={loading}
-            onClick={populate}
-            startIcon={<SendIcon />}
-            variant="contained">
-            Submit
-          </Button>
-          {loading && (
-            <CircularProgress size={24} className={classes.buttonProgress} />
-          )}
-        </div>
-        <div className={classes.wrapper}>
-          <CustomTooltip title={tooltipTitle}>
+        <Paper className={classes.paper} elevation={4}>
+          <Form
+            courseId={courseId}
+            email={email}
+            error={error}
+            password={password}
+            setCourseId={setCourseId}
+            setEmail={setEmail}
+            setPassword={setPassword}
+          />
+          <div className={classes.wrapper}>
             <Button
               className={classes.button}
-              color="secondary"
-              disabled={deleteLoading}
-              onClick={deleteAssignments}
-              startIcon={<DeleteIcon />}
+              color="primary"
+              disabled={loading}
+              onClick={populate}
+              startIcon={<SendIcon />}
               variant="contained">
-              Delete Course Data
+              Submit
             </Button>
-          </CustomTooltip>
-          {deleteLoading && (
-            <CircularProgress size={24} className={classes.buttonProgress} />
-          )}
-        </div>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
+          <div className={classes.wrapper}>
+            <CustomTooltip title={tooltipTitle}>
+              <Button
+                className={classes.button}
+                color="secondary"
+                disabled={deleteLoading}
+                onClick={deleteAssignments}
+                startIcon={<DeleteIcon />}
+                variant="contained">
+                Delete Course Data
+              </Button>
+            </CustomTooltip>
+            {deleteLoading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
+        </Paper>
         <InactiveStudents
           assignments={assignments}
           courseDbId={courseDbId}
