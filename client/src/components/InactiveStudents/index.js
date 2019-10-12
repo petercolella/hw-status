@@ -68,16 +68,16 @@ const InactiveStudents = props => {
     setState({ ...state, [name]: event.target.checked });
   };
 
-  function handleClickOpen() {
+  const handleClickOpen = () => {
     setOpen(true);
-  }
+  };
 
-  function handleClose() {
+  const handleClose = () => {
     if (courseDbId) loadData(courseDbId);
     setOpen(false);
-  }
+  };
 
-  function handleSubmit() {
+  const handleSubmit = () => {
     const newInactiveStudents = [];
 
     Object.keys(state).forEach(name => {
@@ -94,7 +94,7 @@ const InactiveStudents = props => {
       API.updateCourse(courseDbId, courseData)
         .then(res => handleClose())
         .catch(err => console.error(err));
-  }
+  };
 
   return (
     <div>
