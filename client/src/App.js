@@ -7,15 +7,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SendIcon from '@material-ui/icons/Send';
-import Slide from '@material-ui/core/Slide';
-import Snackbar from '@material-ui/core/Snackbar';
 
 import CustomTooltip from './components/CustomTooltip';
 import FilteredAssignments from './components/FilteredAssignments';
 import Form from './components/Form';
 import Header from './components/Header';
 import InactiveStudents from './components/InactiveStudents';
-import SnackbarContentWrapper from './components/SnackbarContentWrapper';
+import SnackbarComponent from './components/SnackbarComponent';
 import Table from './components/Table';
 
 import API from './utils/API';
@@ -60,10 +58,6 @@ const filterTableData = data => {
         !data.filteredAssignments.includes(assignment['assignmentTitle'])
     );
 };
-
-function TransitionUp(props) {
-  return <Slide {...props} direction="down" />;
-}
 
 function App() {
   const classes = useStyles();
@@ -110,23 +104,6 @@ function App() {
         }
       })
       .catch(err => console.error(err));
-  };
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setSnackbarOpen(false);
-    setTimeout(
-      () =>
-        setError({
-          email: false,
-          password: false,
-          courseId: false
-        }),
-      2000
-    );
   };
 
   const handleFormError = () => {
@@ -205,24 +182,13 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Snackbar
-        ContentProps={{
-          'aria-describedby': 'message-id'
-        }}
-        TransitionComponent={TransitionUp}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        autoHideDuration={2000}
-        onClose={handleSnackbarClose}
-        open={snackbarOpen}>
-        <SnackbarContentWrapper
-          message={snackbarMessage}
-          onClose={handleSnackbarClose}
-          variant={variant}
-        />
-      </Snackbar>
+      <SnackbarComponent
+        setError={setError}
+        setSnackbarOpen={setSnackbarOpen}
+        snackbarMessage={snackbarMessage}
+        snackbarOpen={snackbarOpen}
+        variant={variant}
+      />
       <Container maxWidth="lg">
         <Form
           courseId={courseId}
