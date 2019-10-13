@@ -9,11 +9,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Paper from '@material-ui/core/Paper';
 import SendIcon from '@material-ui/icons/Send';
 
+import CurrentCourse from './components/CurrentCourse';
 import CustomTooltip from './components/CustomTooltip';
-import FilteredAssignments from './components/FilteredAssignments';
 import Form from './components/Form';
 import Header from './components/Header';
-import InactiveStudents from './components/InactiveStudents';
 import SnackbarComponent from './components/SnackbarComponent';
 import Table from './components/Table';
 
@@ -249,16 +248,11 @@ function App() {
             </div>
           </div>
         </Paper>
-        <InactiveStudents
-          assignments={assignments}
-          courseDbId={courseDbId}
-          inactiveStudents={inactiveStudents}
-          loadData={loadData}
-        />
-        <FilteredAssignments
+        <CurrentCourse
           assignments={assignments}
           courseDbId={courseDbId}
           filteredAssignments={filteredAssignments}
+          inactiveStudents={inactiveStudents}
           loadData={loadData}
         />
         <Table tableData={tableData} />
