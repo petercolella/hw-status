@@ -41,10 +41,7 @@ const columns = [
       filter: true,
       sort: true,
       setCellProps: cellValue => {
-        if (
-          cellValue === 'Unsubmitted & Ungraded' ||
-          cellValue === 'Incomplete'
-        ) {
+        if (cellValue === 'Unsubmitted' || cellValue === 'Incomplete') {
           return { style: { color: red['A400'] } };
         }
 
