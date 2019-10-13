@@ -77,6 +77,7 @@ function App() {
 
   const [assignments, setAssignments] = useState([]);
   const [courseDbId, setCourseDbId] = useState('');
+  const [currentCourseId, setCurrentCourseId] = useState('');
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [inactiveStudents, setInactiveStudents] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -107,6 +108,7 @@ function App() {
           const filteredTableData = filterTableData(res.data);
 
           setAssignments(res.data.assignments);
+          setCurrentCourseId(res.data.courseId);
           setFilteredAssignments(res.data.filteredAssignments);
           setInactiveStudents(res.data.nonStudents);
           setTableData(filteredTableData);
@@ -251,6 +253,7 @@ function App() {
         <CurrentCourse
           assignments={assignments}
           courseDbId={courseDbId}
+          currentCourseId={currentCourseId}
           filteredAssignments={filteredAssignments}
           inactiveStudents={inactiveStudents}
           loadData={loadData}
