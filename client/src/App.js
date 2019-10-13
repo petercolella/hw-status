@@ -22,7 +22,7 @@ import './App.css';
 
 const useStyles = makeStyles(theme => ({
   button: {
-    margin: theme.spacing(1, 2, 1, 0)
+    margin: theme.spacing(0, 1, 1)
   },
   buttonContainer: {
     display: 'flex',
@@ -58,7 +58,7 @@ const filterTableData = data => {
         assignment['submitted'] === '\u{2705}' && assignment['grade'] === null
           ? 'Ungraded'
           : assignment['submitted'] === '\u274C' && assignment['grade'] === null
-          ? 'Unsubmitted & Ungraded'
+          ? 'Unsubmitted'
           : assignment['grade'];
       return { ...assignment, grade: assignment['grade'] };
     })
@@ -199,7 +199,7 @@ function App() {
         snackbarOpen={snackbarOpen}
         variant={variant}
       />
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Paper className={classes.paper} elevation={4}>
           <Form
             courseId={courseId}
