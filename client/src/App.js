@@ -77,6 +77,7 @@ function App() {
 
   const [assignments, setAssignments] = useState([]);
   const [courseDbId, setCourseDbId] = useState('');
+  const [courseLoaded, setCourseLoaded] = useState(false);
   const [currentCourseId, setCurrentCourseId] = useState('');
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [inactiveStudents, setInactiveStudents] = useState([]);
@@ -176,6 +177,7 @@ function App() {
       API.deleteAssignments({ email, password, courseId })
         .then(res => {
           clearFormAndRemoveData(res);
+          setCourseLoaded(false);
           setDeleteLoading(false);
         })
         .catch(err => {
@@ -195,6 +197,7 @@ function App() {
       API.populateAssignments({ email, password, courseId })
         .then(res => {
           clearFormAndLoadData(res);
+          setCourseLoaded(true);
           setLoading(false);
         })
         .catch(err => {
@@ -270,6 +273,7 @@ function App() {
         <CurrentCourse
           assignments={assignments}
           courseDbId={courseDbId}
+          courseLoaded={courseLoaded}
           currentCourseId={currentCourseId}
           filteredAssignments={filteredAssignments}
           inactiveStudents={inactiveStudents}
