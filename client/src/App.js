@@ -108,6 +108,7 @@ function App() {
           const filteredTableData = filterTableData(res.data);
 
           setAssignments(res.data.assignments);
+          setCourseDbId(res.data._id);
           setCurrentCourseId(res.data.courseId);
           setFilteredAssignments(res.data.filteredAssignments);
           setInactiveStudents(res.data.nonStudents);
@@ -115,6 +116,15 @@ function App() {
         }
       })
       .catch(err => console.error(err));
+  };
+
+  const removeData = () => {
+    setAssignments([]);
+    setCourseDbId('');
+    setCurrentCourseId('');
+    setFilteredAssignments([]);
+    setInactiveStudents([]);
+    setTableData([]);
   };
 
   const handleFormError = () => {
@@ -128,13 +138,6 @@ function App() {
     setSnackbarOpen(true);
   };
 
-  const clearFormAndLoadData = res => {
-    setEmail('');
-    setPassword('');
-    setCourseId('');
-    loadData(res.data._id);
-  };
-
   const handleResError = err => {
     console.error(err);
     setSnackbarMessage(
@@ -143,6 +146,24 @@ function App() {
     );
     setVariant('error');
     setSnackbarOpen(true);
+  };
+
+  const clearForm = () => {
+    setEmail('');
+    setPassword('');
+    setCourseId('');
+  };
+
+  const clearFormAndLoadData = res => {
+    localStorage.setItem('courseDbId', res.data._id);
+    clearForm();
+    loadData(res.data._id);
+  };
+
+  const clearFormAndRemoveData = res => {
+    localStorage.removeItem('courseDbId');
+    clearForm();
+    removeData();
   };
 
   const deleteAssignments = () => {
@@ -154,9 +175,7 @@ function App() {
       }
       API.deleteAssignments({ email, password, courseId })
         .then(res => {
-          localStorage.removeItem('courseDbId');
-          clearFormAndLoadData(res);
-          setCourseDbId('');
+          clearFormAndRemoveData(res);
           setDeleteLoading(false);
         })
         .catch(err => {
@@ -175,9 +194,7 @@ function App() {
       }
       API.populateAssignments({ email, password, courseId })
         .then(res => {
-          localStorage.setItem('courseDbId', res.data._id);
           clearFormAndLoadData(res);
-          setCourseDbId(res.data._id);
           setLoading(false);
         })
         .catch(err => {
