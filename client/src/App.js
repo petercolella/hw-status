@@ -98,7 +98,6 @@ function App() {
     const id = localStorage.getItem('courseDbId');
     if (id) {
       loadData(id);
-      setCourseDbId(id);
     }
   }, []);
 
@@ -110,6 +109,7 @@ function App() {
 
           setAssignments(res.data.assignments);
           setCourseDbId(res.data._id);
+          setCourseLoaded(true);
           setCurrentCourseId(res.data.courseId);
           setFilteredAssignments(res.data.filteredAssignments);
           setInactiveStudents(res.data.nonStudents);
