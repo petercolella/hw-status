@@ -1,8 +1,27 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Collapse, Paper, Typography } from '@material-ui/core';
+import {
+  createMuiTheme,
+  makeStyles,
+  ThemeProvider
+} from '@material-ui/core/styles';
+import { Collapse, Grid, Paper, Typography } from '@material-ui/core';
 import InactiveStudents from '../InactiveStudents';
 import FilteredAssignments from '../FilteredAssignments';
+
+const theme = createMuiTheme({
+  typography: {
+    h6: {
+      textAlign: 'left'
+    }
+  },
+  overrides: {
+    MuiTypography: {
+      h6: {
+        textAlign: 'left'
+      }
+    }
+  }
+});
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -12,11 +31,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'flex-end'
   },
-  headingContainer: {
-    display: 'flex',
-    fontSize: 16,
-    justifyContent: 'flex-start',
-    margin: theme.spacing(0, 1)
+  grid: {
+    padding: theme.spacing(0, 2)
   },
   paper: {
     margin: theme.spacing(2),
@@ -30,12 +46,20 @@ const CurrentCourse = props => {
   return (
     <Collapse in={props.courseLoaded} timeout={'auto'}>
       <Paper className={classes.paper} elevation={4}>
-        <Typography
-          className={classes.headingContainer}
-          variant="h6"
-          gutterBottom>
-          Current Course ID: {props.currentCourseId}
-        </Typography>
+        <Grid
+          className={classes.grid}
+          container
+          direction="row"
+          justify="space-between">
+          <Grid item xs>
+            <ThemeProvider theme={theme}>
+              <Typography variant="h6" gutterBottom>
+                Current Course ID: {props.currentCourseId}
+              </Typography>
+            </ThemeProvider>
+          </Grid>
+          <Grid item xs></Grid>
+        </Grid>
         <div className={classes.buttonContainer}>
           <InactiveStudents
             assignments={props.assignments}
