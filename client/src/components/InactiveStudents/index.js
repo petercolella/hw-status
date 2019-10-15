@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import EditIcon from '@material-ui/icons/Edit';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -13,9 +14,20 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import API from '../../utils/API';
 
+const CustomButton = withStyles(theme => ({
+  root: {
+    color: '#fff',
+    backgroundColor: '#14c6e6',
+    '&:hover': {
+      backgroundColor: '#37bcdb'
+    }
+  }
+}))(Button);
+
 const useStyles = makeStyles(theme => ({
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(0, 1, 1),
+    padding: '6px 16px'
   },
   root: {
     display: 'flex'
@@ -147,12 +159,13 @@ const InactiveStudents = props => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Button
+      <CustomButton
         className={classes.button}
-        color="secondary"
-        onClick={handleClickOpen}>
-        View/Edit Inactive Students
-      </Button>
+        color="primary"
+        onClick={handleClickOpen}
+        startIcon={<EditIcon />}>
+        Inactive Students
+      </CustomButton>
     </div>
   );
 };
