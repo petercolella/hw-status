@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {
+  createMuiTheme,
+  makeStyles,
+  ThemeProvider
+} from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 
 import Button from '@material-ui/core/Button';
@@ -18,6 +22,14 @@ import Table from './components/Table';
 
 import API from './utils/API';
 import './App.css';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#1976d2'
+    }
+  }
+});
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -252,15 +264,17 @@ function App() {
               )}
             </div>
             <div className={classes.wrapper}>
-              <Button
-                className={classes.button}
-                color="primary"
-                disabled={loading}
-                onClick={populate}
-                startIcon={<SendIcon />}
-                variant="contained">
-                Submit
-              </Button>
+              <ThemeProvider theme={theme}>
+                <Button
+                  className={classes.button}
+                  color="primary"
+                  disabled={loading}
+                  onClick={populate}
+                  startIcon={<SendIcon />}
+                  variant="contained">
+                  Submit
+                </Button>
+              </ThemeProvider>
               {loading && (
                 <CircularProgress
                   size={24}
