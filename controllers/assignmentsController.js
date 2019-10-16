@@ -1,5 +1,6 @@
 const db = require('../models');
 const axios = require('axios');
+const fs = require('fs');
 
 function axiosConfig(response, courseId) {
   return {
@@ -58,6 +59,22 @@ function handleError(res, err) {
   return res.status(err.response.status).json(err);
 }
 
+// Function to create dummy data
+function createJSONDataFile(res, response) {
+  const jsonContent = JSON.stringify(response.data, null, 2);
+
+  fs.writeFile('./data/data.json', jsonContent, 'utf8', function(err) {
+    if (err) {
+      console.log('An error occured while writing JSON Object to File.');
+      res.send('Error');
+      return console.log(err);
+    }
+
+    console.log('JSON file has been saved.');
+    res.send('Success!');
+  });
+}
+
 module.exports = {
   delete: function(req, res) {
     const { email, password, courseId } = req.body;
@@ -100,6 +117,7 @@ module.exports = {
           return res.status(401).json(response.data.errorCode);
         axios(axiosConfig(response, courseId))
           .then(response => {
+            // createJSONDataFile(res, response);
             db.Assignment.insertMany(response.data)
               .then(assignments => createAssignmentIdArray(assignments))
               .then(idArr => {
