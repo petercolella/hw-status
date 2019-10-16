@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    marginTop: -12,
+    marginTop: -16,
     marginLeft: -12
   },
   paper: {
