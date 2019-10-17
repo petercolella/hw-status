@@ -76,35 +76,45 @@ function createJSONDataFile(res, response) {
   });
 }
 
+function testDelete(courseId, res) {
+  findCourse(courseId)
+    .then(docs => {
+      if (!docs) {
+        return res.status(404).json('Course is not in database.');
+      } else {
+        deleteCourseAssignments(docs).then(() => {
+          updateCourse(docs, [])
+            .then(updatedCourse => {
+              res.json(updatedCourse);
+            })
+            .catch(err => res.status(422).json(err));
+        });
+      }
+    })
+    .catch(err => handleError(res, err));
+}
+
 function testPopulate(courseId, res) {
-  console.log('test');
-  //   res.end();
   db.Assignment.insertMany(data)
     .then(assignments => createAssignmentIdArray(assignments))
     .then(idArr => {
-      findCourse(courseId)
-        .then(docs => {
-          if (!docs) {
-            newCourse(courseId, idArr)
-              .then(newCourse => {
-                console.log('newCourse:', newCourse);
-                res.json(newCourse);
+      findCourse(courseId).then(docs => {
+        if (!docs) {
+          newCourse(courseId, idArr)
+            .then(newCourse => {
+              res.json(newCourse);
+            })
+            .catch(err => res.status(422).json(err));
+        } else {
+          deleteCourseAssignments(docs).then(() => {
+            updateCourse(docs, idArr)
+              .then(updatedCourse => {
+                res.json(updatedCourse);
               })
               .catch(err => res.status(422).json(err));
-          } else {
-            deleteCourseAssignments(docs)
-              .then(() => {
-                updateCourse(docs, idArr)
-                  .then(updatedCourse => {
-                    console.log('updatedCourse:', updatedCourse);
-                    res.json(updatedCourse);
-                  })
-                  .catch(err => res.status(422).json(err));
-              })
-              .catch(err => handleError(res, err));
-          }
-        })
-        .catch(err => handleError(res, err));
+          });
+        }
+      });
     })
     .catch(err => handleError(res, err));
 }
@@ -113,6 +123,13 @@ module.exports = {
   delete: function(req, res) {
     const { email, password, courseId } = req.body;
     const login = { email, password };
+    if (
+      email === 'test@test.com' &&
+      password === 'test' &&
+      courseId === '1111'
+    ) {
+      return testDelete(courseId, res);
+    }
     axios
       .post('https://www.bootcampspot.com/api/instructor/v1/login', login)
       .then(response => {
