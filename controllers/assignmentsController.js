@@ -1,6 +1,7 @@
 const db = require('../models');
 const axios = require('axios');
 const fs = require('fs');
+const data = require('../data/data.json');
 
 function axiosConfig(response, courseId) {
   return {
@@ -75,6 +76,39 @@ function createJSONDataFile(res, response) {
   });
 }
 
+function testPopulate(courseId, res) {
+  console.log('test');
+  //   res.end();
+  db.Assignment.insertMany(data)
+    .then(assignments => createAssignmentIdArray(assignments))
+    .then(idArr => {
+      findCourse(courseId)
+        .then(docs => {
+          if (!docs) {
+            newCourse(courseId, idArr)
+              .then(newCourse => {
+                console.log('newCourse:', newCourse);
+                res.json(newCourse);
+              })
+              .catch(err => res.status(422).json(err));
+          } else {
+            deleteCourseAssignments(docs)
+              .then(() => {
+                updateCourse(docs, idArr)
+                  .then(updatedCourse => {
+                    console.log('updatedCourse:', updatedCourse);
+                    res.json(updatedCourse);
+                  })
+                  .catch(err => res.status(422).json(err));
+              })
+              .catch(err => handleError(res, err));
+          }
+        })
+        .catch(err => handleError(res, err));
+    })
+    .catch(err => handleError(res, err));
+}
+
 module.exports = {
   delete: function(req, res) {
     const { email, password, courseId } = req.body;
@@ -109,6 +143,13 @@ module.exports = {
   populate: function(req, res) {
     const { email, password, courseId } = req.body;
     const login = { email, password };
+    if (
+      email === 'test@test.com' &&
+      password === 'test' &&
+      courseId === '1111'
+    ) {
+      return testPopulate(courseId, res);
+    }
     axios
       .post('https://www.bootcampspot.com/api/instructor/v1/login', login)
       .then(response => {
