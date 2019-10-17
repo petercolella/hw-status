@@ -54,7 +54,7 @@ const InactiveStudents = props => {
           []
         )
       )
-    );
+    ).sort();
     setNameArr(newNameArr);
   };
 

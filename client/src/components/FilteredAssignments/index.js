@@ -54,7 +54,7 @@ const FilteredAssignments = props => {
           []
         )
       )
-    );
+    ).sort();
     setTitleArr(newTitleArr);
   };
 
