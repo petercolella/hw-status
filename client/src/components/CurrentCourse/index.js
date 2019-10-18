@@ -61,16 +61,16 @@ const CurrentCourse = props => {
           <Grid item xs></Grid>
         </Grid>
         <div className={classes.buttonContainer}>
-          <InactiveStudents
-            assignments={props.assignments}
-            courseDbId={props.courseDbId}
-            inactiveStudents={props.inactiveStudents}
-            loadData={props.loadData}
-          />
           <FilteredAssignments
             assignments={props.assignments}
             courseDbId={props.courseDbId}
             filteredAssignments={props.filteredAssignments}
+            loadData={props.loadData}
+          />
+          <InactiveStudents
+            assignments={props.assignments}
+            courseDbId={props.courseDbId}
+            inactiveStudents={props.inactiveStudents}
             loadData={props.loadData}
           />
         </div>
