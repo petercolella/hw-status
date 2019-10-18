@@ -1,0 +1,6 @@
+{
+  "delete": "Delete API data. Inactive students and filtered assignments will remain in database.",
+  "filtered": "Edit Filtered Assignments",
+  "inactive": "Edit Inactive Students",
+  "submit": "Submit Bootcamp Spot credentials and Course ID."
+}

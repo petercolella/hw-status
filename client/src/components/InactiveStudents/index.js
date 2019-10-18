@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import CustomTooltip from '../CustomTooltip';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -13,6 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import API from '../../utils/API';
+import tooltipTitle from '../../utils/tooltipTitle.json';
 
 const CustomButton = withStyles(theme => ({
   root: {
@@ -159,13 +161,15 @@ const InactiveStudents = props => {
           </Button>
         </DialogActions>
       </Dialog>
-      <CustomButton
-        className={classes.button}
-        color="primary"
-        onClick={handleClickOpen}
-        startIcon={<EditIcon />}>
-        Inactive Students
-      </CustomButton>
+      <CustomTooltip title={tooltipTitle.inactive}>
+        <CustomButton
+          className={classes.button}
+          color="primary"
+          onClick={handleClickOpen}
+          startIcon={<EditIcon />}>
+          Inactive Students
+        </CustomButton>
+      </CustomTooltip>
     </div>
   );
 };

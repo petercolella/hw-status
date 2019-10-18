@@ -23,6 +23,8 @@ import Table from './components/Table';
 import API from './utils/API';
 import './App.css';
 
+import tooltipTitle from './utils/tooltipTitle.json';
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -219,9 +221,6 @@ function App() {
     }
   };
 
-  const tooltipTitle =
-    'Only the API data will be deleted. Inactive students and filtered assignments will remain in the database.';
-
   return (
     <div className="App">
       <Header />
@@ -245,7 +244,7 @@ function App() {
           />
           <div className={classes.buttonContainer}>
             <div className={classes.wrapper}>
-              <CustomTooltip title={tooltipTitle}>
+              <CustomTooltip title={tooltipTitle.delete}>
                 <Button
                   className={classes.button}
                   color="secondary"
@@ -265,15 +264,17 @@ function App() {
             </div>
             <div className={classes.wrapper}>
               <ThemeProvider theme={theme}>
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  disabled={loading}
-                  onClick={populate}
-                  startIcon={<SendIcon />}
-                  variant="contained">
-                  Submit
-                </Button>
+                <CustomTooltip title={tooltipTitle.submit}>
+                  <Button
+                    className={classes.button}
+                    color="primary"
+                    disabled={loading}
+                    onClick={populate}
+                    startIcon={<SendIcon />}
+                    variant="contained">
+                    Submit
+                  </Button>
+                </CustomTooltip>
               </ThemeProvider>
               {loading && (
                 <CircularProgress
