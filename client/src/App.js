@@ -19,6 +19,7 @@ import Form from './components/Form';
 import Header from './components/Header';
 import SnackbarComponent from './components/SnackbarComponent';
 import Table from './components/Table';
+import Welcome from './components/Welcome';
 
 import API from './utils/API';
 import './App.css';
@@ -224,6 +225,7 @@ function App() {
   return (
     <div className="App">
       <Header />
+      <Welcome />
       <SnackbarComponent
         setError={setError}
         setSnackbarOpen={setSnackbarOpen}
