@@ -56,7 +56,7 @@ const FilteredAssignments = props => {
           []
         )
       )
-    ).sort();
+    ).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     setTitleArr(newTitleArr);
   };
 

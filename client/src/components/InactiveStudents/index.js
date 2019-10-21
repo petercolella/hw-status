@@ -56,7 +56,7 @@ const InactiveStudents = props => {
           []
         )
       )
-    ).sort();
+    ).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     setNameArr(newNameArr);
   };
 
