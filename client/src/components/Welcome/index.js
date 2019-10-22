@@ -17,8 +17,12 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.spacing(4)
   },
   contentText: {
-    // paddingLeft: '3.75rem',
-    // paddingRight: '3.75rem'
+    margin: '0 auto',
+    padding: 0,
+    '& li': {
+      listStyleType: 'none',
+      textAlign: 'left'
+    }
   },
   dialog: {
     display: 'flex',
@@ -28,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   title: {
-    padding: theme.spacing(4)
+    padding: theme.spacing(3, 4)
   }
 }));
 
@@ -54,18 +58,46 @@ const Welcome = () => {
             Homework Status
           </Typography>
         </DialogTitle>
-        <DialogContent className={classes.content}>
-          <DialogContentText className={classes.contentText} variant="h5">
+        <DialogContent className={classes.content} dividers>
+          <DialogContentText color="textPrimary" variant="h5">
             Welcome!
           </DialogContentText>
-          <DialogContentText className={classes.contentText}>
-            This app uses the Bootcamp Spot Grades API. Enter your email address
-            and password, along with the course ID of your cohort.
+          <DialogContentText>
+            This app uses the Bootcamp Spot Grades API.
           </DialogContentText>
-          <DialogContentText className={classes.contentText}>
-            If you would like a demo, use Email: <em>test@test.com</em>,
-            Password: <em>test</em>, and Course ID: <em>1111</em>.
+          <DialogContentText>
+            Enter your email address and password, along with the course ID of
+            your cohort.
           </DialogContentText>
+          <DialogContentText>
+            If you would like a demo, enter:
+          </DialogContentText>
+          <Typography
+            className={classes.contentText}
+            color="textSecondary"
+            component="ul"
+            variant="body1">
+            {/* <ul> */}
+            <li>
+              Email &mdash;{' '}
+              <strong>
+                <em>test@test.com</em>
+              </strong>
+            </li>
+            <li>
+              Password &mdash;{' '}
+              <strong>
+                <em>test</em>
+              </strong>
+            </li>
+            <li>
+              Course ID &mdash;{' '}
+              <strong>
+                <em>1111</em>
+              </strong>
+            </li>
+            {/* </ul> */}
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
