@@ -77,7 +77,6 @@ const Welcome = () => {
             color="textSecondary"
             component="ul"
             variant="body1">
-            {/* <ul> */}
             <li>
               Email &mdash;{' '}
               <strong>
@@ -96,7 +95,6 @@ const Welcome = () => {
                 <em>1111</em>
               </strong>
             </li>
-            {/* </ul> */}
           </Typography>
         </DialogContent>
         <DialogActions>

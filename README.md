@@ -4,6 +4,24 @@
 
 # Changelog
 
+## [1.4.0] - 2019-10-23
+
+### Added
+
+- Icons to buttons
+- Bootcamp Spot favicon
+- Roboto font
+- Collapse component for current course
+- Test data for demo user
+- Tooltips to remaining buttons
+- Welcome modal
+
+### Changed
+
+- Head title
+- Button styling
+- Package versions
+
 ## [1.3.0] - 2019-10-9
 
 ### Added
