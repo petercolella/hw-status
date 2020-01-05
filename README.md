@@ -4,6 +4,13 @@
 
 # Changelog
 
+## [1.5.0] - 2020-1-4
+
+### Added
+
+- Package updates
+- Code clean-up
+
 ## [1.4.0] - 2019-10-23
 
 ### Added
