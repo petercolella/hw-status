@@ -145,7 +145,6 @@ module.exports = {
                 .then(() => {
                   updateCourse(docs, [])
                     .then(updatedCourse => {
-                      console.log('updatedCourse:', updatedCourse);
                       res.json(updatedCourse);
                     })
                     .catch(err => res.status(422).json(err));
@@ -184,7 +183,6 @@ module.exports = {
                     if (!docs) {
                       newCourse(courseId, idArr)
                         .then(newCourse => {
-                          console.log('newCourse:', newCourse);
                           res.json(newCourse);
                         })
                         .catch(err => res.status(422).json(err));
@@ -193,7 +191,6 @@ module.exports = {
                         .then(() => {
                           updateCourse(docs, idArr)
                             .then(updatedCourse => {
-                              console.log('updatedCourse:', updatedCourse);
                               res.json(updatedCourse);
                             })
                             .catch(err => res.status(422).json(err));
