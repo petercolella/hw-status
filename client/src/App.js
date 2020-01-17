@@ -110,7 +110,7 @@ function App() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
-    const id = localStorage.getItem('courseDbId');
+    const id = sessionStorage.getItem('courseDbId');
     if (id) {
       loadData(id);
     }
@@ -171,13 +171,13 @@ function App() {
   };
 
   const clearFormAndLoadData = res => {
-    localStorage.setItem('courseDbId', res.data._id);
+    sessionStorage.setItem('courseDbId', res.data._id);
     clearForm();
     loadData(res.data._id);
   };
 
   const clearFormAndRemoveData = res => {
-    localStorage.removeItem('courseDbId');
+    sessionStorage.removeItem('courseDbId');
     clearForm();
     removeData();
   };
