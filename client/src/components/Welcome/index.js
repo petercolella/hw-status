@@ -6,9 +6,17 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
+  actions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(1, 2)
+  },
   content: {
     display: 'flex',
     flexDirection: 'column',
@@ -39,10 +47,21 @@ const useStyles = makeStyles(theme => ({
 const Welcome = () => {
   const classes = useStyles();
 
-  const [open, setOpen] = useState(true);
+  const showWelcome =
+    localStorage.getItem('show') !== null
+      ? JSON.parse(localStorage.getItem('show'))
+      : true;
+
+  const [checked, setChecked] = useState(false);
+  const [show, setShow] = useState(showWelcome);
+
+  const handleChange = () => {
+    setChecked(!checked);
+  };
 
   const handleClose = () => {
-    setOpen(false);
+    localStorage.setItem('show', !checked);
+    setShow(false);
   };
 
   return (
@@ -50,7 +69,7 @@ const Welcome = () => {
       fullWidth
       maxWidth="xl"
       onClose={handleClose}
-      open={open}
+      open={show}
       scroll={'body'}>
       <div className={classes.dialog}>
         <DialogTitle className={classes.title} disableTypography>
@@ -97,7 +116,20 @@ const Welcome = () => {
             </li>
           </Typography>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={classes.actions}>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={handleChange}
+                  value="checked"
+                  color="default"
+                />
+              }
+              label="Don't show again"
+            />
+          </FormGroup>
           <Button onClick={handleClose} color="primary">
             Continue
           </Button>
