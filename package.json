@@ -23,6 +23,6 @@
     "concurrently": "^8.2.0",
     "express": "^5.2.1",
     "if-env": "^1.0.4",
-    "mongoose": "^8.24.1"
+    "mongoose": "^8.24.7"
   }
 }
